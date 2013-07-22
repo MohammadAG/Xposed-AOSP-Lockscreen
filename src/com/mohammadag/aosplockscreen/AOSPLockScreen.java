@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -22,13 +23,7 @@ public class AOSPLockScreen implements IXposedHookLoadPackage {
 		prefs = new XSharedPreferences(AOSPLockScreen.class.getPackage().getName());
 		
 		XposedHelpers.findAndHookMethod("com.android.internal.policy.impl.LockScreen", lpparam.classLoader,
-				"shouldEnableMenuKey", new XC_MethodHook() {
-			
-    		@Override
-    		protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-    			param.setResult(false);
-    		}
-		});
+				"shouldEnableMenuKey", XC_MethodReplacement.DO_NOTHING);
 		
 		Class<?> lockPatternUtilsClass = findClass("com.android.internal.widget.LockPatternUtils", lpparam.classLoader);
 		Class<?> keyguardUpdateMonitorClass = findClass("com.android.internal.policy.impl.KeyguardUpdateMonitor", lpparam.classLoader);
